@@ -25,6 +25,18 @@
 	flex-direction: column;
 	border: red solid 1px;
 }
+
+.table_pie {
+	display: flex;
+	flex-direction: row;
+	border: blue solid 1px;
+}
+
+.line_bar {
+	display: flex;
+	flex-direction: row;
+	border: blue solid 1px;
+}
 </style>
 <title>Chart</title>
 </head>
