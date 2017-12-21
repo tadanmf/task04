@@ -34,6 +34,10 @@ dependencies {
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	
+	// https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.20'
+	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+	
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '1.5.9.RELEASE'
 	
