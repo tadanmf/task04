@@ -190,14 +190,12 @@ function axiosInterceptor() {
 }
 
 function getData() {
-	log.debug('content.idx: ${ coidxntent.idx }');
-	var idx = '${ content.idx }';
-	log.debug('idx:', idx);
-	var param = {
-			'idx' : idx
-	}		
 	axios.get('${ pageContext.request.contextPath }/getData')
 		.then(function(response) {
+			log.debug('response:', response);
+			
+			//파이 차트
+			createPieChart(response.data.pie_data);
 	});
 }
 
@@ -211,23 +209,46 @@ function createDataTable() {
 	$('#table_length select').addClass('ui search dropdown');
 }
 
-function createPieChart() {
+function createPieChart(data) {
+	log.debug('data:', data);
+	log.debug('isArray:', Array.isArray(data));
+
 	var ctx_pie = $('#pie_chart');
+	var datasets = [];
+	var dataset = {};
+	var length = data.length;
+	for(var i = 0 ; i < length ; i++) {
+		var vo = data[i];
+		dataset = {
+				lavel: vo.type,
+				data: vo.value
+		}
+		datasets.push(dataset);
+	}
+	
 	var pie_chart = new Chart(ctx_pie,{
 		"type":"doughnut",
 		"data":{
 			"labels":["Red","Blue","Yellow"],
-			"datasets":[{
-				"label":"My First Dataset",
-				"data":[300,50,100],
-				"backgroundColor":[
-					"rgb(255, 99, 132)",
-					"rgb(54, 162, 235)",
-					"rgb(255, 205, 86)"
-					]
-			}]
+			"datasets": datasets
 		}
 	});
+	
+// 	var pie_chart = new Chart(ctx_pie,{
+// 		"type":"doughnut",
+// 		"data":{
+// 			"labels":["Red","Blue","Yellow"],
+// 			"datasets":[{
+// 				"label":"My First Dataset",
+// 				"data":[300,50,100],
+// 				"backgroundColor":[
+// 					"rgb(255, 99, 132)",
+// 					"rgb(54, 162, 235)",
+// 					"rgb(255, 205, 86)"
+// 					]
+// 			}]
+// 		}
+// 	});
 }
 
 function createLineChart() {

@@ -23,7 +23,9 @@ public class MainDAO {
 	private RowMapper<StatisticVO> mapper = BeanPropertyRowMapper.newInstance(StatisticVO.class);
 
 	public List<StatisticVO> getPieData() {
-		String sql = "SELECT `type`, COUNT(*) value FROM event_tbl GROUP BY `type` ORDER BY value DESC";
+		String sql = "SELECT `type`, COUNT(*) value FROM event_tbl "
+				+ " WHERE l_date BETWEEN 1513349999000 AND 1513954799000 "
+				+ " GROUP BY `type` ORDER BY value DESC ";
 		
 //		return jdbcTemplate.queryForMap(sql, new HashMap<>());
 		return jdbcTemplate.query(sql, new HashMap<>(), mapper);
