@@ -195,7 +195,7 @@ function getData() {
 			log.debug('response:', response);
 			
 			//파이 차트
-			createPieChart(response.data.pie_data);
+			createPieChart(response.pie_data);
 	});
 }
 
