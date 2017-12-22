@@ -11,8 +11,12 @@
 <!-- chart.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <!-- datatables -->
-<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<!-- axios -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- loglevel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/loglevel/1.6.0/loglevel.min.js"></script>
 <style type="text/css">
 .wrap {
 	width: 100%;
@@ -85,13 +89,119 @@
 	width: 70% !important;
 	height: auto !important;
 }
+
+.loading_bar {
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	text-align: center;
+	background: rgba(0, 0, 0, 0.7);
+	z-index: 8000;
+}
+
+.spinner {
+  margin: 350px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  
+  -webkit-animation: sk-rotate 2.0s infinite linear;
+  animation: sk-rotate 2.0s infinite linear;
+}
+
+.dot1, .dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #fff;
+  border-radius: 100%;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
 </style>
 <script>
 $(document).ready(function() {
+	console.log(log);
+	log.setDefaultLevel("debug");
+	
 	init();
 });
 
 function init() {
+// 	axiosInterceptor();
+	getData();
+	
+	createDataTable();
+	
+	createPieChart();
+	
+	createLineChart();
+	
+	createStackBarChart();
+}
+
+function axiosInterceptor() {
+	axios.interceptors.request.use(function (config) {
+		$('.loading_bar').show();
+		log.info('log test');
+	    return config;
+	  }, function (error) {
+	    return Promise.reject(error);
+	  });
+	
+	axios.interceptors.response.use(function (response) {
+		_.delay(function() {
+				$('.loading_bar').hide();
+			}, 1000);
+	    return response;
+	  }, function (error) {
+	    return Promise.reject(error);
+	  });
+}
+
+function getData() {
+	log.debug('content.idx: ${ coidxntent.idx }');
+	var idx = '${ content.idx }';
+	log.debug('idx:', idx);
+	var param = {
+			'idx' : idx
+	}		
+	axios.get('${ pageContext.request.contextPath }/getData')
+		.then(function(response) {
+	});
+}
+
+function createDataTable() {
 	$('#table').DataTable({
 		"lengthMenu": [5, 10], 
 		"searching": false,
@@ -99,7 +209,9 @@ function init() {
 	});
 	
 	$('#table_length select').addClass('ui search dropdown');
-	
+}
+
+function createPieChart() {
 	var ctx_pie = $('#pie_chart');
 	var pie_chart = new Chart(ctx_pie,{
 		"type":"doughnut",
@@ -116,7 +228,9 @@ function init() {
 			}]
 		}
 	});
-	
+}
+
+function createLineChart() {
 	var ctx_line = $('#line_chart');
 	var line_chart = new Chart(ctx_line, {
 	    // The type of chart we want to create
@@ -136,7 +250,9 @@ function init() {
 	    // Configuration options go here
 	    options: {}
 	});
-	
+}
+
+function createStackBarChart() {
 	var ctx_bar = $('#bar_chart');
 	var bar_chart = new Chart(ctx_bar, {
 	    type: 'bar',
@@ -180,6 +296,13 @@ function init() {
 </head>
 <body>
 	<div class="wrap">
+		<!-- loading bar -->
+		<div class="loading_bar">
+			<div class="spinner">
+				<div class="dot1"></div>
+				<div class="dot2"></div>
+			</div>
+		</div>
 		<div class="container">
 			<div class="search">
 				<form>
