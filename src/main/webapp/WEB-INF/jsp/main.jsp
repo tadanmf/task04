@@ -184,8 +184,8 @@ function init() {
 
 function setInitDate() {
 	getInitDate();
-// 	log.debug(start);
-// 	log.debug(end);
+	log.debug(start);
+	log.debug(end);
 	
 	$('#start').val(start);
 	$('#end').val(end);
@@ -234,6 +234,9 @@ function getData() {
 		
 		//파이 차트
 		createPieChart(response.data.pie_data);
+		
+		// 라인 차트
+		createLineChart(response.data.line_data);
 	});
 }
 

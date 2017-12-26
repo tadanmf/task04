@@ -17,6 +17,7 @@ import com.task04.statistic.vo.StatisticVO;
 @Repository
 public class MainDAO {
 	Logger log = LoggerFactory.getLogger(this.getClass());
+	final String l_date = " WHERE l_date >= :start AND l_date <= :end ";
 	
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
@@ -24,8 +25,8 @@ public class MainDAO {
 	private RowMapper<StatisticVO> mapper = BeanPropertyRowMapper.newInstance(StatisticVO.class);
 
 	public List<StatisticVO> getPieData(long start, long end) {
-		String sql = "SELECT `type`, COUNT(*) value FROM event_tbl "
-				+ " WHERE l_date >= :start AND l_date <= :end "
+		String sql = "SELECT `type`, COUNT(*) AS value FROM event_tbl "
+				+ l_date
 				+ " GROUP BY `type` ORDER BY value DESC ";
 		
 		Map<String, Object> map = new HashMap<>();
@@ -37,13 +38,17 @@ public class MainDAO {
 //		return jdbcTemplate.queryForObject(sql, new HashMap<>(), new ColumnMapRowMapper());
 	}
 
-	public List<StatisticVO> getLineData() {
-		String sql = "SELECT `type`, FROM_UNIXTIME(FLOOR(l_date/1000), '%Y-%m-%d') AS `date`, COUNT(*) AS cnt " 
+	public List<StatisticVO> getLineData(long start, long end) {
+		String sql = "SELECT `type`, FROM_UNIXTIME(FLOOR(l_date/1000), '%Y-%m-%d') AS `date`, COUNT(*) AS value " 
 						+ " FROM event_tbl " 
-						+ " WHERE l_date BETWEEN 1513349999000 AND 1513954799000 " 
+						+ l_date
 						+ " GROUP BY `date`, `type` ORDER BY `date`, `type` ";
 		
-		return jdbcTemplate.query(sql, new HashMap<>(), mapper);
+		Map<String, Object> map = new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		
+		return jdbcTemplate.query(sql, map, mapper);
 	}
 	
 	
