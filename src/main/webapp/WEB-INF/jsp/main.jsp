@@ -150,6 +150,8 @@
 }
 </style>
 <script>
+var color_lst = ["#3370AD", "#F56400", "#FFC400", "#41BB38", "#3e95cd", "#8e5ea2", "#3cba9f", "#c45850", "#3F7B7E", "#3C4EAA", "#8370C9", "#53498F", "#A74E8B", "#824361", "#A27B51", "#C5AD79", "#745F53", "#848484", "#103134", "#0F1754", "#372A67", "#191440", "#52173D", "#361221", "#4E3118", "#655630", "#2D2019", "#383838", "#CBB500", "#e8c3b9"];
+
 $(document).ready(function() {
 	console.log(log);
 	log.setDefaultLevel("debug");
@@ -163,7 +165,7 @@ function init() {
 	
 	createDataTable();
 	
-	createPieChart();
+// 	createPieChart();
 	
 	createLineChart();
 	
@@ -195,7 +197,7 @@ function getData() {
 			log.debug('response:', response);
 			
 			//파이 차트
-			createPieChart(response.pie_data);
+			createPieChart(response.data.pie_data);
 	});
 }
 
@@ -211,27 +213,45 @@ function createDataTable() {
 
 function createPieChart(data) {
 	log.debug('data:', data);
-	log.debug('isArray:', Array.isArray(data));
+// 	log.debug('isArray:', Array.isArray(data));
 
 	var ctx_pie = $('#pie_chart');
+	var length = data.length;
+	var _data = {};
+	var labels = [];
 	var datasets = [];
 	var dataset = {};
-	var length = data.length;
+	var data_list = [];
+	var backgroundColor = [];
+	
+// 	log.debug('ctx_pie:', ctx_pie);	
+// 	log.debug('length:', length);
+	
 	for(var i = 0 ; i < length ; i++) {
 		var vo = data[i];
-		dataset = {
-				lavel: vo.type,
-				data: vo.value
-		}
-		datasets.push(dataset);
+		
+		labels.push('2017-12-' + (1 + i));
+		data_list.push(vo.value);
+		backgroundColor.push(color_lst[i]);
 	}
+	dataset = {
+		data: data_list,
+		backgroundColor : backgroundColor
+	}
+	datasets.push(dataset);
+	_data = {
+		labels: labels,
+		datasets: datasets
+	}
+// 	_data.push(labels);
+// 	_data.push(datasets);
+	
+	log.debug('_data:', _data);
+// 	log.debug('value_data:', value_data);
 	
 	var pie_chart = new Chart(ctx_pie,{
 		"type":"doughnut",
-		"data":{
-			"labels":["Red","Blue","Yellow"],
-			"datasets": datasets
-		}
+		"data":_data
 	});
 	
 // 	var pie_chart = new Chart(ctx_pie,{
@@ -245,7 +265,7 @@ function createPieChart(data) {
 // 					"rgb(255, 99, 132)",
 // 					"rgb(54, 162, 235)",
 // 					"rgb(255, 205, 86)"
-// 					]
+// 				]
 // 			}]
 // 		}
 // 	});
@@ -327,7 +347,8 @@ function createStackBarChart() {
 		<div class="container">
 			<div class="search">
 				<form>
-					<input type="date" />
+					<input type="date" name="start"/>
+					<input type="date" name="end"/>
 				</form>
 				<button class="ui button">search</button>
 			</div>
