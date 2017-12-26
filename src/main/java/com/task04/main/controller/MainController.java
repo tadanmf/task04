@@ -26,8 +26,10 @@ public class MainController {
 	
 	@RequestMapping("getData")
 	@ResponseBody
-	public Map getData() {
-		return service.getData();
+	public Map getData(long start, long end) {
+		log.info("start: " + start + ", end: " + end);
+		
+		return service.getData(start, end);
 	}
 	
 }

@@ -17,18 +17,14 @@ public class MainService {
 	@Autowired
 	MainDAO dao;
 
-	public Map getData() {
-		log.info("dao.getPieData: " + dao.getPieData());
+	public Map getData(long start, long end) {
+		log.info("dao.getPieData: " + dao.getPieData(start, end));
 		log.info("dao.getLineData: " + dao.getLineData());
 		
 		Map result = new HashMap<>();
 		
-		// 검색 날짜
-		String start = "";
-		String end = "";
-		
 		// 파이 차트
-		result.put("pie_data", dao.getPieData());
+		result.put("pie_data", dao.getPieData(start, end));
 		
 		// 라인 차트
 //		List<StatisticVO> line_source = dao.getLineData();

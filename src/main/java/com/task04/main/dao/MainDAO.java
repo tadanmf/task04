@@ -2,6 +2,7 @@ package com.task04.main.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +23,17 @@ public class MainDAO {
 	
 	private RowMapper<StatisticVO> mapper = BeanPropertyRowMapper.newInstance(StatisticVO.class);
 
-	public List<StatisticVO> getPieData() {
+	public List<StatisticVO> getPieData(long start, long end) {
 		String sql = "SELECT `type`, COUNT(*) value FROM event_tbl "
-				+ " WHERE l_date BETWEEN 1513349999000 AND 1513954799000 "
+				+ " WHERE l_date >= :start AND l_date <= :end "
 				+ " GROUP BY `type` ORDER BY value DESC ";
 		
+		Map<String, Object> map = new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		
 //		return jdbcTemplate.queryForMap(sql, new HashMap<>());
-		return jdbcTemplate.query(sql, new HashMap<>(), mapper);
+		return jdbcTemplate.query(sql, map, mapper);
 //		return jdbcTemplate.queryForObject(sql, new HashMap<>(), new ColumnMapRowMapper());
 	}
 

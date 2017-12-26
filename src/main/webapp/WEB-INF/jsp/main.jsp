@@ -151,6 +151,9 @@
 </style>
 <script>
 var color_lst = ["#3370AD", "#F56400", "#FFC400", "#41BB38", "#3e95cd", "#8e5ea2", "#3cba9f", "#c45850", "#3F7B7E", "#3C4EAA", "#8370C9", "#53498F", "#A74E8B", "#824361", "#A27B51", "#C5AD79", "#745F53", "#848484", "#103134", "#0F1754", "#372A67", "#191440", "#52173D", "#361221", "#4E3118", "#655630", "#2D2019", "#383838", "#CBB500", "#e8c3b9"];
+var start = new Date();
+var end;
+var pie_chart = null;
 
 $(document).ready(function() {
 	console.log(log);
@@ -160,6 +163,8 @@ $(document).ready(function() {
 });
 
 function init() {
+	setInitDate();
+	
 // 	axiosInterceptor();
 	getData();
 	
@@ -170,6 +175,28 @@ function init() {
 	createLineChart();
 	
 	createStackBarChart();
+	
+	$('#search').click(function() {
+// 		log.debug('click!');
+		getData();
+	});
+}
+
+function setInitDate() {
+	getInitDate();
+// 	log.debug(start);
+// 	log.debug(end);
+	
+	$('#start').val(start);
+	$('#end').val(end);
+}
+
+function getInitDate() {
+	end = new Date().toISOString().substr(0, 10).replace('T', ' ');
+	
+	// 일주일 전 날짜
+	start.setDate(new Date().getDate() - 7);
+	start = start.toISOString().substr(0, 10).replace('T', ' ');
 }
 
 function axiosInterceptor() {
@@ -192,12 +219,21 @@ function axiosInterceptor() {
 }
 
 function getData() {
-	axios.get('${ pageContext.request.contextPath }/getData')
-		.then(function(response) {
-			log.debug('response:', response);
-			
-			//파이 차트
-			createPieChart(response.data.pie_data);
+// 	log.debug('$("#start").val():', typeof (new Date($('#start').val()).getTime() / 1000) );
+	var start = new Date($('#start').val()).getTime();
+	var end = new Date($('#end').val()).getTime();
+	
+	axios.get('${ pageContext.request.contextPath }/getData', {
+		params: {
+			start: start,
+			end: end
+		}
+	})
+	.then(function(response) {
+		log.debug('response:', response);
+		
+		//파이 차트
+		createPieChart(response.data.pie_data);
 	});
 }
 
@@ -212,8 +248,13 @@ function createDataTable() {
 }
 
 function createPieChart(data) {
-	log.debug('data:', data);
-// 	log.debug('isArray:', Array.isArray(data));
+// 	log.debug('data:', data);
+
+	// 차트가 이미 그려졌으면 지운다
+	if(pie_chart != null) {
+// 		log.debug('before pie_chart:', pie_chart);
+		pie_chart.destroy();
+	}
 
 	var ctx_pie = $('#pie_chart');
 	var length = data.length;
@@ -230,7 +271,7 @@ function createPieChart(data) {
 	for(var i = 0 ; i < length ; i++) {
 		var vo = data[i];
 		
-		labels.push('2017-12-' + (1 + i));
+		labels.push('type(' + vo.type + ')');
 		data_list.push(vo.value);
 		backgroundColor.push(color_lst[i]);
 	}
@@ -246,13 +287,13 @@ function createPieChart(data) {
 // 	_data.push(labels);
 // 	_data.push(datasets);
 	
-	log.debug('_data:', _data);
+// 	log.debug('_data:', _data);
 // 	log.debug('value_data:', value_data);
 	
-	var pie_chart = new Chart(ctx_pie,{
+	pie_chart = new Chart(ctx_pie,{
 		"type":"doughnut",
 		"data":_data
-	});
+	})
 	
 // 	var pie_chart = new Chart(ctx_pie,{
 // 		"type":"doughnut",
@@ -347,10 +388,10 @@ function createStackBarChart() {
 		<div class="container">
 			<div class="search">
 				<form>
-					<input type="date" name="start"/>
-					<input type="date" name="end"/>
+					<input type="date" name="start" id="start"/>
+					<input type="date" name="end" id="end"/>
 				</form>
-				<button class="ui button">search</button>
+				<button class="ui button" id="search">search</button>
 			</div>
 			<div class="table_pie">
 				<div class="table_div">
