@@ -42,4 +42,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '1.5.9.RELEASE'
 	
+	// https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports
+	compile group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.2.0'
+	// https://mvnrepository.com/artifact/com.lowagie/itext
+	// iText는 웹페이지 상으로 PDF나 Excel등을 embeded된 상태로 나타낼때 사용
+	compile group: 'com.lowagie', name: 'itext', version: '2.1.7'
+	
 }

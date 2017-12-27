@@ -37,6 +37,7 @@ public class MainService {
 		List<StatisticVO> line_source = dao.getLineData(start, end);
 		result.put("line_data", getParsingLineData(line_source, start, end));
 
+		// 테이블
 		result.put("grid_data", getParsingGridData(line_source, start, end));
 
 		return result;
@@ -53,8 +54,8 @@ public class MainService {
 
 		// 틀
 		Map init_grid_data = getInitGridData(line_source, type_lst, date_lst);
-		log.info("***init_line_data.size(): " + init_grid_data.size());
-		log.info("***init_line_data.size(): " + init_grid_data.toString());
+//		log.info("***init_line_data.size(): " + init_grid_data.size());
+//		log.info("***init_line_data.size(): " + init_grid_data.toString());
 
 		// 틀에 데이터(value) 삽입
 		return getGridData(line_source, init_grid_data, date_lst);
@@ -72,7 +73,7 @@ public class MainService {
 			// vo.value = item.value;
 		}
 		
-//		log.info("init_grid_data: " + init_grid_data);
+		log.info("init_grid_data: " + init_grid_data);
 		
 		return init_grid_data;
 	}
@@ -84,30 +85,31 @@ public class MainService {
 //		log.info("init_grid_data: " + init_grid_data);
 		
 		int length = init_grid_data.size();
-		List result_item = null;
+		Map result_item = null;
 		int temp = -1;
 		
 		String type = "type(" + item.getType() + ")";
 		
 		for (int i = 0; i < length; i++) {
 //			log.info("init_grid_data.get(i): " + init_grid_data.get(i));
-			result_item = (List) init_grid_data.get(i);
+			result_item = (Map) init_grid_data.get(i);
 			
-			if( type.equals(result_item.get(0)) ) {
+			if( type.equals(result_item.get("type")) ) {
 //				log.info("result_item.get(0): " + result_item.get(0));
 				int item_size = result_item.size() - 1;
 //				log.info("item_size: " + item_size);
 //				log.info("(int)result_item.get(item_size): " + (int)result_item.get(item_size-1));
 				
-				result_item.set(item_size, ((int)result_item.get(item_size) + item.getValue()));
+				result_item.put("total", ((int)result_item.get("total") + item.getValue()));
 				
-				temp = date_lst.indexOf(item.getDate());
+				result_item.put(item.getDate(), item.getValue());
+//				temp = date_lst.indexOf(item.getDate());
 //				log.info("temp: " + temp);
 				
-				if (temp != -1) {
-					temp += 1;
-					result_item.set(temp, item.getValue());
-				}
+//				if (temp != -1) {
+//					temp += 1;
+//					result_item.set(temp, item.getValue());
+//				}
 			}
 		}
 		
@@ -117,40 +119,43 @@ public class MainService {
 	private Map getInitGridData(List<StatisticVO> line_source, List type_lst, List date_lst) {
 		// 틀
 		List result = new ArrayList();
-		List colums = new ArrayList();
-		List result_item = new ArrayList();
-		Map colums_item = null;
+		List columns = new ArrayList();
+		Map result_item = null;
+		Map columns_item = null;
 		int type_total = type_lst.size();
 		int date_total = date_lst.size();
 
-		colums_item = new HashMap<>();
-		colums_item.put("title", "type");
-		colums.add(colums_item);
+		columns_item = new HashMap<>();
+		columns_item.put("title", "type");
+		columns_item.put("data", "type");
+		columns.add(columns_item);
 		for (int i = 0; i < type_total; i++) {
-			result_item = new ArrayList<>();
-			result_item.add(type_lst.get(i));
+			result_item = new HashMap<>();
+			result_item.put("type", type_lst.get(i));
 			
 			for (int j = 0; j < date_total; j++) {
 				if (i == 0) {
-					colums_item = new HashMap<>();
-					colums_item.put("title", date_lst.get(j));
-					colums.add(colums_item);
+					columns_item = new HashMap<>();
+					columns_item.put("title", date_lst.get(j));
+					columns_item.put("data", date_lst.get(j));
+					columns.add(columns_item);
 				}
-				result_item.add(0);
+				result_item.put(date_lst.get(j), 0);
 			}
-			result_item.add(0);
+			result_item.put("total", 0);
 			result.add(result_item);
 		}
-		colums_item = new HashMap<>();
-		colums_item.put("title", "total");
-		colums.add(colums_item);
+		columns_item = new HashMap<>();
+		columns_item.put("title", "total");
+		columns_item.put("data", "total");
+		columns.add(columns_item);
 		
 //		log.info("***result: " + result.toString());
 //		log.info("***colums: " + colums.toString());
 		
 		Map map = new HashMap<>();
 		map.put("result", result);
-		map.put("colums", colums);
+		map.put("columns", columns);
 
 		return map;
 	}
@@ -298,6 +303,38 @@ public class MainService {
 		}
 		$item.put("date", date_list);
 		$item.put("value", value_list);
+	}
+
+	public void downloadReport() {
+//		Map paramterMap = new HashMap<>();
+//		paramterMap.put("AAA", "aaa"); //key value 형태의 parameterMap을 만듭니다.
+//
+//		JasperReport jasperReport = JasperCompileManager.compileReport(session.getServletContext().getRealPath("/WEB-INF/jasper/reports/issuer_report.jrxml")); //..jrxml의 경로를 잡아줍니다.
+//
+//		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameterMap, DriverManager.getConnection("jdbc:oracle:thin:@!!!:###:bbb","aaa","ccc")); //디비정보를 넣어주세요.
+//
+//		ServletOutputStream sos=response.getOutputStream();
+//		response.setHeader("Content-disposition", "attachment; filename=" + "이름.pdf");
+//		JasperExportManager.exportReportToPdfStream(jasperPrint, sos);
+		
+//		JasperReportsPdfView view = new JasperReportsPdfView();
+//		view.setJdbcDataSource(dataSource);
+//		view.setUrl("/WEB-INF/reports/sample.jrxml");
+//		Map<String, Object> params = new HashMap<>();
+//		params.put("param1", "param1 value");
+//		view.setApplicationContext(appContext);
+//		return new ModelAndView(view, params);
+		
+//		File reportFile = new File(application.getRealPath("report_name.jasper"));//your report_name.jasper file
+//        Map parameters = new HashMap();
+//        byte[] bytes = JasperRunManager.runReportToPdf(reportFile.getPath(), parameters, conn);
+//
+//        response.setContentType("application/pdf");
+//        response.setContentLength(bytes.length);
+//        ServletOutputStream outStream = response.getOutputStream();
+//        outStream.write(bytes, 0, bytes.length);
+//        outStream.flush();
+//        outStream.close();
 	}
 
 }

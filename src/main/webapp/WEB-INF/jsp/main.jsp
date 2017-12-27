@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- semantic-ui -->
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
@@ -51,7 +51,7 @@
 	height: 3%;
 	display: flex;
 	flex-direction: row;
-	justify-content: flex-end;
+	justify-content: space-between;
 	align-items: center;
 	/*   	border: blue solid 1px; */
 }
@@ -93,6 +93,17 @@
 	align-items: center;
 }
 
+.two_for_one {
+	width: 50%;
+}
+
+.two_for_two {
+	width: 50%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+}
 #pie_chart {
 	width: 70% !important;
 	height: auto !important;
@@ -205,9 +216,10 @@ scale
 	var start = new Date();
 	var end;
 	var pie_chart = null;
+	var grid_table = null;
 
 	$(document).ready(function() {
-		console.log(log);
+// 		console.log(log);
 		log.setDefaultLevel("debug");
 
 		init();
@@ -222,6 +234,10 @@ scale
 		$('#search').click(function() {
 			// 		log.debug('click!');
 			getData();
+		});
+		
+		$('#report').click(function() {
+			location.href = "${ pageContext.request.contextPath }/downloadReport";
 		});
 	}
 
@@ -282,18 +298,35 @@ scale
 			
 			// 테이블
 			createDataTable(response.data.grid_data);
+			
+			// 바 차트
+			createStackBarChart();
 		});
 	}
 	
 	function createDataTable(data) {
-		log.debug('data:', data);
+// 		log.debug('data:', data);
+// 		log.debug('data.result:', data.result);
+// 		log.debug('data.columns:', data.columns);
 		
-		$('#table').DataTable({
-			 data: data.result,
-		     columns: data.columns
-		});
+// 		if ( $.fn.dataTable.isDataTable( '#grid_table' ) ) {
+// 			log.debug('asd');
+// 			grid_table.destroy();
+// // 		    table = $('#example').DataTable();
+// 		}
 
-		$('#table_length select').addClass('ui search dropdown');
+// 		if (grid_table != null) {
+// 			log.debug('before grid_table:', grid_table);
+// 			grid_table.destroy();
+// 		}
+		
+		grid_table = $('#grid_table').DataTable({
+			 data: data.result,
+		     columns: data.columns,
+		     destroy: true,
+		     searching: false,
+		     lengthMenu: [ 5, 10, 25, 50, 75, 100 ]
+		});
 	}
 
 	function createPieChart(data) {
@@ -362,7 +395,7 @@ scale
 	}
 
 	function createLineChart(data) {
-		log.debug('data:', data.length);
+// 		log.debug('data:', data.length);
 
 		//var ctx_line = $('#line_chart');
 		var ctx_line = document.getElementById("line_chart").getContext("2d");
@@ -480,15 +513,19 @@ scale
 		</div>
 		<div class="container">
 			<div class="search">
-				<form>
-					<input type="date" name="start" id="start" /> <input type="date" name="end" id="end" />
-				</form>
-				<button class="ui button" id="search">search</button>
+				<div class="two_for_one">
+					<button class="ui button" id="report">report</button>
+				</div>
+				<div class="two_for_two">
+					<form>
+						<input type="date" name="start" id="start" /> <input type="date" name="end" id="end" />
+					</form>
+					<button class="ui button" id="search">search</button>
+				</div>
 			</div>
 			<div class="table_pie">
 				<div class="table_div">
-					<table id="table" class="ui celled table" cellspacing="0" width="100%">
-						
+					<table id="grid_table" class="ui celled table" cellspacing="0" width="100%">
 					</table>
 				</div>
 				<div class="pie_chart_div">
@@ -497,7 +534,7 @@ scale
 			</div>
 			<div class="line_bar">
 				<div class="line_chart_div">
-					<canvas id="line_chart" style="width:100%;height:100%"></canvas>
+					<canvas id="line_chart"></canvas>
 				</div>
 				<div class="bar_chart_div">
 					<canvas id="bar_chart"></canvas>
