@@ -35,17 +35,27 @@ dependencies {
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	
-	// https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
-	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.20'
 	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
-	
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '1.5.9.RELEASE'
+
+	// https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
+//	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.20'
 	
 	// https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports
-	compile group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.2.0'
+//	compile group: 'net.sf.jasperreports', name: 'jasperreports', version: '5.5.1'
+	// https://mvnrepository.com/artifact/org.olap4j/olap4j
+//	compile group: 'org.olap4j', name: 'olap4j', version: '1.2.0'
+	// https://mvnrepository.com/artifact/tomcat/jasper-compiler-jdt
+//	compile group: 'tomcat', name: 'jasper-compiler-jdt', version: '5.5.23'
+	// https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts
+//	compile group: 'net.sf.jasperreports', name: 'jasperreports-fonts', version: '6.0.0'
+	// https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all
+//	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.13'
+	
+//	compile group: 'com.google.code.maven-play-plugin.org.apache.commons', name: 'commons-javaflow', version: '1590792'
+
 	// https://mvnrepository.com/artifact/com.lowagie/itext
 	// iText는 웹페이지 상으로 PDF나 Excel등을 embeded된 상태로 나타낼때 사용
-	compile group: 'com.lowagie', name: 'itext', version: '2.1.7'
+//	compile group: 'com.lowagie', name: 'itext', version: '4.2.1'
 	
 }

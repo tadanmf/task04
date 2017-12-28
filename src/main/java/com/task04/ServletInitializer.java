@@ -7,10 +7,12 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
 public class ServletInitializer extends SpringBootServletInitializer {
-	
-	  public static void main(String[] args) {
-	        SpringApplication.run(ServletInitializer.class, args);
-	    }	
+    
+    public static void main(String[] args) {
+          SpringApplication.run(ServletInitializer.class, args);
+          
+//          System.out.println("*** " + java.awt.GraphicsEnvironment.isHeadless());
+      }    
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

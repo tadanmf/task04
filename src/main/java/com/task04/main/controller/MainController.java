@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.task04.main.service.MainService;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -46,30 +45,36 @@ public class MainController {
 	
 	@RequestMapping("downloadReport")
 	public void downloadReport(HttpServletRequest request, HttpServletResponse response) {
-		log.info("*** downloadReport ***");
+		log.info("*** downloadReport1 ***");
 		
 		HttpSession session = request.getSession();
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		String jasper_file = session.getServletContext().getRealPath("/WEB-INF/reports/report1.jasper");
 		
 		log.info("jasper_file: " + jasper_file);
+		
+		log.info(new File(jasper_file).exists()+"");
 
-		parameters.put("test", "과연");
+//		parameters.put("test", "과연");
 		
 		JasperReport report = null;
 		JasperPrint print = null;
+		
+		//InputStream reportStreamEar = (InputStream) this.getClass().getResourceAsStream("/WEB-INF/reports/report1.jasper");
 		    
 		try {
 			report = (JasperReport) JRLoader.loadObject(new File(jasper_file));
 		} catch (JRException e1) {
 			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
-		log.debug("-FILL-");
-		try {
-			print = JasperFillManager.fillReport(report, parameters);
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
+		log.info("-FILL-");
+//		try {
+//			print = JasperFillManager.fillReport(report, parameters);
+//		} catch (JRException e) {
+//			e.printStackTrace();
+//		}
+		
 		
 //		Map<String,Object> parameterMap = new HashMap<String,Object>();
 //        
