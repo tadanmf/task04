@@ -45,26 +45,14 @@ public class MainController {
 		String path = session.getServletContext().getRealPath("/WEB-INF/reports");
 		log.info(path);
 		
-		List statList = new ArrayList<>();
-		
-		Map firstMap = new HashMap<>();
-		firstMap.put("type", "A");
-		firstMap.put("total", 20);
-		statList.add(firstMap);
-		
-		Map secondMap = new HashMap<>();
-		secondMap.put("type", "B");
-		secondMap.put("total", 10);
-		statList.add(secondMap);
-		
-		log.info("statList: " + statList);
-		
-		JRBeanCollectionDataSource statJRBean = new JRBeanCollectionDataSource(statList);
-
-		//		String export_dir = req.getSession().getServletContext().getRealPath("report");
-		//		String jasper_file = req.getSession().getServletContext().getRealPath("report/RiskReport.jasper");
+		JRBeanCollectionDataSource tableJRBean = getTableData();
+		JRBeanCollectionDataSource pieJRBean = getPieData();
+		JRBeanCollectionDataSource lineJRBean = getLineData();
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("TableDataSource", statJRBean);
+		
+		parameters.put("TableDataSource", tableJRBean);
+		parameters.put("PieDataSource", pieJRBean);
+		parameters.put("LineDataSource", lineJRBean);
 		//log.info(jasper_file);
 		
 		try {
@@ -85,4 +73,64 @@ public class MainController {
 			e.printStackTrace();
 		}
 	}
+
+	private JRBeanCollectionDataSource getTableData() {
+		List statList = new ArrayList<>();
+		
+		Map firstMap = new HashMap<>();
+		firstMap.put("type", "A");
+		firstMap.put("total", 20);
+		statList.add(firstMap);
+		
+		Map secondMap = new HashMap<>();
+		secondMap.put("type", "B");
+		secondMap.put("total", 10);
+		statList.add(secondMap);
+		
+		log.info("statList: " + statList);
+		
+		JRBeanCollectionDataSource statJRBean = new JRBeanCollectionDataSource(statList);
+		return statJRBean;
+	}
+	
+	private JRBeanCollectionDataSource getPieData() {
+		List statList = new ArrayList<>();
+		
+		Map firstMap = new HashMap<>();
+		firstMap.put("type", "A");
+		firstMap.put("value", 60);
+		statList.add(firstMap);
+		
+		Map secondMap = new HashMap<>();
+		secondMap.put("type", "B");
+		secondMap.put("value", 10);
+		statList.add(secondMap);
+		
+		log.info("statList: " + statList);
+		
+		JRBeanCollectionDataSource statJRBean = new JRBeanCollectionDataSource(statList);
+		return statJRBean;
+	}
+	
+	private JRBeanCollectionDataSource getLineData() {
+		List statList = new ArrayList<>();
+		
+		Map firstMap = new HashMap<>();
+		firstMap.put("type", "line A");
+		firstMap.put("date", "2017-12-28");
+		firstMap.put("value", 11);
+		statList.add(firstMap);
+		
+		Map secondMap = new HashMap<>();
+		secondMap.put("types", "line B");
+		secondMap.put("date", "2017-12-29");
+		secondMap.put("values", 22);
+		statList.add(secondMap);
+		
+		log.info("statList: " + statList);
+		
+		JRBeanCollectionDataSource statJRBean = new JRBeanCollectionDataSource(statList);
+		return statJRBean;
+	}
+
 }
