@@ -48,11 +48,13 @@ public class MainController {
 		JRBeanCollectionDataSource tableJRBean = getTableData();
 		JRBeanCollectionDataSource pieJRBean = getPieData();
 		JRBeanCollectionDataSource lineJRBean = getLineData();
+		JRBeanCollectionDataSource barJRBean = getBarData();
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		
 		parameters.put("TableDataSource", tableJRBean);
 		parameters.put("PieDataSource", pieJRBean);
 		parameters.put("LineDataSource", lineJRBean);
+		parameters.put("BarDataSource", barJRBean);
 		//log.info(jasper_file);
 		
 		try {
@@ -118,13 +120,47 @@ public class MainController {
 		Map firstMap = new HashMap<>();
 		firstMap.put("type", "line A");
 		firstMap.put("date", "2017-12-28");
-		firstMap.put("value", 11);
+		firstMap.put("value", 50);
+		statList.add(firstMap);
+		
+		firstMap = new HashMap<>();
+		firstMap.put("type", "line A");
+		firstMap.put("date", "2017-12-29");
+		firstMap.put("value", 20);
+		statList.add(firstMap);
+		
+		
+		Map secondMap = new HashMap<>();
+		secondMap.put("type", "line B");
+		secondMap.put("date", "2017-12-29");
+		secondMap.put("value", 22);
+		statList.add(secondMap);
+		
+		log.info("statList: " + statList);
+		
+		JRBeanCollectionDataSource statJRBean = new JRBeanCollectionDataSource(statList);
+		return statJRBean;
+	}
+	
+	private JRBeanCollectionDataSource getBarData() {
+		List statList = new ArrayList<>();
+		
+		Map firstMap = new HashMap<>();
+		firstMap.put("type", "bar A");
+		firstMap.put("date", "2017-12-28");
+		firstMap.put("value", 100);
+		statList.add(firstMap);
+		
+		firstMap = new HashMap<>();
+		firstMap.put("type", "bar A");
+		firstMap.put("date", "2017-12-29");
+		firstMap.put("value", 51);
 		statList.add(firstMap);
 		
 		Map secondMap = new HashMap<>();
-		secondMap.put("types", "line B");
+		secondMap.put("type", "bar B");
 		secondMap.put("date", "2017-12-29");
-		secondMap.put("values", 22);
+		secondMap.put("value", 81);
 		statList.add(secondMap);
 		
 		log.info("statList: " + statList);
