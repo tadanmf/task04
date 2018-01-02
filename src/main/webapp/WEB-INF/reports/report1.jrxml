@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e62113ad-5bc3-4a3b-955a-93a850b34e5d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="270"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -76,9 +76,11 @@
 			<style backcolor="#EFF7FF"/>
 		</conditionalStyle>
 	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
 	<subDataset name="Table_Dataset" uuid="3112dfb8-8ea6-4452-8992-22cdd94b7a9b">
 		<field name="type" class="java.lang.String"/>
-		<field name="total" class="java.lang.Integer"/>
+		<field name="date" class="java.lang.String"/>
+		<field name="value" class="java.lang.Integer"/>
 	</subDataset>
 	<subDataset name="Pie_Dataset" uuid="126c4de6-672c-4b2e-b44e-33a2145a8a19">
 		<field name="type" class="java.lang.String"/>
@@ -105,55 +107,11 @@
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="455" splitType="Stretch">
+		<band height="802" splitType="Stretch">
 			<elementGroup/>
-			<componentElement>
-				<reportElement key="table 2" style="table 2" x="0" y="0" width="329" height="158" uuid="8ed310c8-69fa-4e75-98ad-f2eaedab69e5"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Table_Dataset" uuid="08961d6c-dfcd-4c2e-a44e-2c4eeb6f392b">
-						<dataSourceExpression><![CDATA[$P{TableDataSource}]]></dataSourceExpression>
-					</datasetRun>
-					<jr:column width="90" uuid="dbb04631-3f32-4be2-a2e0-8e3b0929e564">
-						<jr:columnHeader style="table 2_CH" height="21" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="90" height="19" uuid="feb76b6d-620b-4966-a135-18e9f2af2a3e"/>
-								<text><![CDATA[type]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="table 2_TD" height="29" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="90" height="20" uuid="6d2edfb9-8397-474e-9cde-acf4e7e1dc6b"/>
-								<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="90" uuid="c1ae5b76-2c7b-4ff6-bc5e-40e293606cc9">
-						<jr:columnHeader style="table 2_CH" height="21" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="90" height="19" uuid="adbada78-ae83-4f82-89fc-d1e1ecc7d420"/>
-								<text><![CDATA[total]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="table 2_TD" height="29" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="90" height="20" uuid="186b1e6f-0f0b-4e2a-8337-73b6a3735e85"/>
-								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="90" uuid="1f05b932-e6c2-48e8-894e-a10641b5bbb8">
-						<jr:columnHeader style="table 2_CH" height="21" rowSpan="1"/>
-						<jr:detailCell style="table 2_TD" height="29" rowSpan="1"/>
-					</jr:column>
-					<jr:column width="90" uuid="49cc1354-7b6b-4496-923c-07e6e9a3efeb">
-						<jr:columnHeader style="table 2_CH" height="21" rowSpan="1"/>
-						<jr:detailCell style="table 2_TD" height="29" rowSpan="1"/>
-					</jr:column>
-				</jr:table>
-			</componentElement>
 			<pieChart>
 				<chart>
-					<reportElement x="329" y="0" width="226" height="158" uuid="7b7a0208-ff90-40fb-bf0c-50a64858fa53"/>
+					<reportElement x="0" y="388" width="226" height="158" uuid="7b7a0208-ff90-40fb-bf0c-50a64858fa53"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
@@ -174,7 +132,7 @@
 			</pieChart>
 			<lineChart>
 				<chart>
-					<reportElement x="0" y="221" width="275" height="128" uuid="955f6a3a-a7c7-4be4-a5fa-1a7facca31f2"/>
+					<reportElement x="0" y="546" width="555" height="128" uuid="955f6a3a-a7c7-4be4-a5fa-1a7facca31f2"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
@@ -203,7 +161,7 @@
 			</lineChart>
 			<stackedBarChart>
 				<chart>
-					<reportElement x="275" y="221" width="280" height="128" uuid="c569b68f-bc5a-4b20-a049-9f653cddc1e9"/>
+					<reportElement x="0" y="674" width="555" height="128" uuid="c569b68f-bc5a-4b20-a049-9f653cddc1e9"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
@@ -231,6 +189,115 @@
 					</valueAxisFormat>
 				</barPlot>
 			</stackedBarChart>
+			<crosstab>
+				<reportElement x="0" y="0" width="555" height="158" uuid="c59bbf2e-6ccf-460d-b50d-2bc62b979e7d"/>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="Table_Dataset" uuid="85d2d856-1e73-404d-afe7-643c99a26a24">
+							<dataSourceExpression><![CDATA[$P{TableDataSource}]]></dataSourceExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<rowGroup name="type" width="70">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{type}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25" uuid="fc1e5af8-e5e8-444c-b123-441ff6902ec4"/>
+								<textFieldExpression><![CDATA[$V{type}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="date" height="30" totalPosition="End" headerPosition="Center">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{date}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="30" uuid="c3711f31-6df4-4db0-a2d2-57031a5d0169"/>
+								<textElement markup="none"/>
+								<textFieldExpression><![CDATA[$V{date}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#E6F3FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" uuid="5990571a-b002-4d18-b78e-b99ef3b4aa9c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="value" class="java.lang.Integer">
+					<measureExpression><![CDATA[$F{value}]]></measureExpression>
+				</measure>
+				<measure name="total" class="java.lang.Integer" calculation="Sum">
+					<measureExpression><![CDATA[$F{value}]]></measureExpression>
+				</measure>
+				<crosstabCell width="51" height="25">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="556a025d-bf07-4189-a84a-8722f8b478eb"/>
+							<textFieldExpression><![CDATA[$V{value}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="type">
+					<cellContents backcolor="#E6F3FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="fe60ede6-6513-4d0f-a3f7-6742f4b95dda"/>
+							<textFieldExpression><![CDATA[$V{value}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="25" columnTotalGroup="date">
+					<cellContents backcolor="#E6F3FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="04b396f8-cecf-4dd4-8a8e-55fa65d81324"/>
+							<textElement markup="none"/>
+							<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="type" columnTotalGroup="date">
+					<cellContents backcolor="#E6F3FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="9ad9be41-f383-4f9e-92d8-3e07ffb7e72b"/>
+							<textFieldExpression><![CDATA[$V{value}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
 		</band>
 	</detail>
 </jasperReport>

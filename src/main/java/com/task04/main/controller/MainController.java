@@ -12,9 +12,10 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.task04.main.service.MainService;
 
@@ -28,34 +29,47 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 @RequestMapping("api")
-@RestController
+@Controller
+//@RestController
 public class MainController {
 
 	@Autowired
-	MainService main_service;
+	MainService service;
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	
+//	@RequestMapping(path = {"/main", "/"})
+	public String goMain() {
+		return "main";
+	}
+	
+//	@RequestMapping("getData")
+	@ResponseBody
+	public Map getData(long start, long end) {
+		log.info("start: " + start + ", end: " + end);
+		
+		return service.getData(start, end);
+	}
 
 	@GetMapping("report")
+	@ResponseBody
 	public void report(HttpServletRequest req) {
+		long start = 1513036800000L;
+		long end = 1513468800000L;
+
+		log.info("start: " + start + ", end: " + end);
+		
 		JasperPrint print = null;
 		JasperReport report = null;
 
 		HttpSession session = req.getSession();
 		String path = session.getServletContext().getRealPath("/WEB-INF/reports");
-		log.info(path);
+//		log.info(path);
 		
-		JRBeanCollectionDataSource tableJRBean = getTableData();
-		JRBeanCollectionDataSource pieJRBean = getPieData();
-		JRBeanCollectionDataSource lineJRBean = getLineData();
-		JRBeanCollectionDataSource barJRBean = getBarData();
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		
-		parameters.put("TableDataSource", tableJRBean);
-		parameters.put("PieDataSource", pieJRBean);
-		parameters.put("LineDataSource", lineJRBean);
-		parameters.put("BarDataSource", barJRBean);
-		//log.info(jasper_file);
+//		JRBeanCollectionDataSource tableJRBean = getTableData();
+
+		Map<String, Object> parameters = service.getJRBeanData(start, end);
+//		parameters.put("TableDataSource", tableJRBean);
 		
 		try {
 			report = (JasperReport) JRLoader.loadObject(new File(path + "/report1.jasper"));
@@ -74,20 +88,45 @@ public class MainController {
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
+		
+		log.info("--- end ---");
 	}
 
 	private JRBeanCollectionDataSource getTableData() {
 		List statList = new ArrayList<>();
 		
+//		StatisticVO vo1 = new StatisticVO("type1", 11, "date1");
+//		StatisticVO vo2 = new StatisticVO("type2", 21, "date1");
+//		StatisticVO vo3 = new StatisticVO("type3", 31, "date1");
+//		StatisticVO vo4 = new StatisticVO("type1", 12, "date2");
+//		statList.add(vo1);
+//		statList.add(vo2);
+//		statList.add(vo3);
+//		statList.add(vo4);
+		
 		Map firstMap = new HashMap<>();
-		firstMap.put("type", "A");
-		firstMap.put("total", 20);
+		firstMap.put("type", "1");
+		firstMap.put("date", "2018-01-01");
+		firstMap.put("value", 20);
 		statList.add(firstMap);
 		
-		Map secondMap = new HashMap<>();
-		secondMap.put("type", "B");
-		secondMap.put("total", 10);
-		statList.add(secondMap);
+		firstMap = new HashMap<>();
+		firstMap.put("type", "1");
+		firstMap.put("date", "2018-01-02");
+		firstMap.put("value", 20);
+		statList.add(firstMap);
+		
+		firstMap = new HashMap<>();
+		firstMap.put("type", "2");
+		firstMap.put("date", "2018-01-01");
+		firstMap.put("value", 20);
+		statList.add(firstMap);
+		
+//		Map secondMap = new HashMap<>();
+//		secondMap.put("type", "B");
+//		firstMap.put("header1", "value1");
+//		secondMap.put("total", 10);
+//		statList.add(secondMap);
 		
 		log.info("statList: " + statList);
 		
@@ -159,8 +198,14 @@ public class MainController {
 		
 		Map secondMap = new HashMap<>();
 		secondMap.put("type", "bar B");
-		secondMap.put("date", "2017-12-29");
+		secondMap.put("date", "2017-12-28");
 		secondMap.put("value", 81);
+		statList.add(secondMap);
+		
+		secondMap = new HashMap<>();
+		secondMap.put("type", "bar B");
+		secondMap.put("date", "2017-12-29");
+		secondMap.put("value", 50);
 		statList.add(secondMap);
 		
 		log.info("statList: " + statList);

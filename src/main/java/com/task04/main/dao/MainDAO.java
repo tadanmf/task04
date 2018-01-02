@@ -25,7 +25,7 @@ public class MainDAO {
 	private RowMapper<StatisticVO> mapper = BeanPropertyRowMapper.newInstance(StatisticVO.class);
 
 	public List<StatisticVO> getPieData(long start, long end) {
-		String sql = "SELECT `type`, COUNT(*) AS value FROM event_tbl "
+		String sql = "SELECT CONCAT('type(',`type`, ')') AS `type`, COUNT(*) AS value FROM event_tbl "
 				+ l_date
 				+ " GROUP BY `type` ORDER BY value DESC ";
 		

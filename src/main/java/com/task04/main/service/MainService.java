@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.task04.main.dao.MainDAO;
 import com.task04.statistic.vo.StatisticVO;
 
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 @Service
 public class MainService {
 	Logger log = LoggerFactory.getLogger(this.getClass());
@@ -41,6 +43,135 @@ public class MainService {
 		result.put("grid_data", getParsingGridData(line_source, start, end));
 
 		return result;
+	}
+
+	// report 용 데이터
+	public Map<String, Object> getJRBeanData(long start, long end) {
+		List<StatisticVO> line_source = dao.getLineData(start, end);
+		
+		JRBeanCollectionDataSource tableJRBean = new JRBeanCollectionDataSource(getParsingReportLineData(line_source, start, end));
+//		JRBeanCollectionDataSource tableJRBean = new JRBeanCollectionDataSource(getParsingReportTableData(line_source, start, end));
+				
+		JRBeanCollectionDataSource pieJRBean = new JRBeanCollectionDataSource(dao.getPieData(start, end));
+		
+		JRBeanCollectionDataSource lineJRBean = new JRBeanCollectionDataSource(getParsingReportLineData(line_source, start, end));
+		
+		JRBeanCollectionDataSource barJRBean = new JRBeanCollectionDataSource(getParsingReportLineData(line_source, start, end));
+		
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("TableDataSource", tableJRBean);
+		parameters.put("PieDataSource", pieJRBean);
+		parameters.put("LineDataSource", lineJRBean);
+		parameters.put("BarDataSource", barJRBean);
+		
+		return parameters;
+	}
+	
+	private List getParsingReportTableData(List<StatisticVO> line_source, long start, long end) {
+		// 타입 리스트
+		List type_lst = getTypeList(line_source);
+		// log.info("type_lst: " + type_lst);
+
+		// 날짜 리스트
+		List date_lst = getDateList(start, end);
+		// log.info("date_lst: " + date_lst);
+
+		// 틀
+		List init_line_data = getInitReportLineData(line_source, type_lst, date_lst);
+
+		// 틀에 데이터(value) 삽입
+		return getReportTableData(line_source, init_line_data);
+	}
+
+	private List getReportTableData(List<StatisticVO> source, List init_line_data) {
+		int total = source.size();
+
+		Map map = new HashMap<>();
+		for (int i = 0; i < total; i++) {
+			StatisticVO item = (StatisticVO) source.get(i);
+
+			// db 데이터와 틀 비교하여 값 삽입
+			getMatchReportTableItem(init_line_data, item);
+			// vo.value = item.value;
+		}
+		
+		return init_line_data;
+	}
+	
+	public void getMatchReportTableItem(List $result, StatisticVO source_item) {
+		int total = $result.size();
+		Map result_item = null;
+		int temp = -1;
+		for (int i = 0; i < total; i++) {
+			result_item = new HashMap<>();
+			result_item = (Map) $result.get(i);
+			String type = "type(" + source_item.getType() + ")";
+			if ( type.equals(result_item.get("type")) && source_item.getDate().equals(result_item.get("date")) ) {
+				result_item.put("value", source_item.getValue());
+			}
+			$result.set(i, result_item);
+		}
+	}
+
+	public List getParsingReportLineData(List<StatisticVO> line_source, long start, long end) {
+		// 타입 리스트
+		List type_lst = getTypeList(line_source);
+		// log.info("type_lst: " + type_lst);
+
+		// 날짜 리스트
+		List date_lst = getDateList(start, end);
+		// log.info("date_lst: " + date_lst);
+
+		// 틀
+		List init_line_data = getInitReportLineData(line_source, type_lst, date_lst);
+
+		// 틀에 데이터(value) 삽입
+		return getReportLineData(line_source, init_line_data);
+	}
+
+	private List getReportLineData(List<StatisticVO> source, List result) {
+		int total = source.size();
+
+		Map map = new HashMap<>();
+		for (int i = 0; i < total; i++) {
+			StatisticVO item = (StatisticVO) source.get(i);
+
+			// db 데이터와 틀 비교하여 값 삽입
+			getMatchReportItem(result, item);
+			// vo.value = item.value;
+		}
+
+		log.info("***getReportLineData result: " + result);
+		
+		return result;
+	}
+
+	private List getInitReportLineData(List<StatisticVO> line_source, List type_lst, List date_lst) {
+		// 틀
+		List result = new ArrayList();
+		int type_total = type_lst.size();
+		int date_total = date_lst.size();
+
+		for (int i = 0; i < type_total; i++) {
+			setReportDateValue(type_lst.get(i).toString(), date_lst, result);
+			// item.put("value", 0);
+		}
+
+		log.info("***result: " + result.toString());
+		return result;
+	}
+	
+	public void setReportDateValue(String type, List $date_lst, List result) {
+		int date_total = $date_lst.size();
+		Map item = null;
+
+		for (int i = 0; i < date_total; i++) {
+			item = new HashMap<>();
+			item.put("type", type);
+			item.put("date", $date_lst.get(i));
+			item.put("value", 0);
+			result.add(item);
+		}
 	}
 
 	public Map getParsingGridData(List<StatisticVO> line_source, long start, long end) {
@@ -255,8 +386,8 @@ public class MainService {
 
 	public List getLineData(List $source, List $result) {
 		int total = $source.size();
-		log.info("***total: " + total);
 
+		Map map = new HashMap<>();
 		for (int i = 0; i < total; i++) {
 			StatisticVO item = (StatisticVO) $source.get(i);
 
@@ -264,9 +395,25 @@ public class MainService {
 			getMatchItem($result, item);
 			// vo.value = item.value;
 		}
+		
 		return $result;
 	}
 
+	public void getMatchReportItem(List $result, StatisticVO source_item) {
+		int total = $result.size();
+		Map result_item = null;
+		int temp = -1;
+		for (int i = 0; i < total; i++) {
+			result_item = new HashMap<>();
+			result_item = (Map) $result.get(i);
+			String type = "type(" + source_item.getType() + ")";
+			if ( type.equals(result_item.get("type")) && source_item.getDate().equals(result_item.get("date")) ) {
+				result_item.put("value", source_item.getValue());
+			}
+			$result.set(i, result_item);
+		}
+	}
+	
 	public void getMatchItem(List $result, StatisticVO source_item) {
 		// log.info("$result: " + $result);
 		// log.info("$result: " + $result.size());

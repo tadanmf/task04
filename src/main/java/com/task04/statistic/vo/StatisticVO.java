@@ -42,5 +42,4 @@ public class StatisticVO {
 	public String toString() {
 		return "StatisticVO [type=" + type + ", value=" + value + ", date=" + date + "]";
 	}
-	
 }

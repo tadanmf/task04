@@ -44,7 +44,7 @@ public class MainController2 {
 		return service.getData(start, end);
 	}
 	
-	@RequestMapping("downloadReport")
+//	@RequestMapping("downloadReport")
 	public void downloadReport(HttpServletRequest request, HttpServletResponse response) {
 		log.info("*** downloadReport1 ***");
 		
